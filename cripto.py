@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import pandas as pd
+import seaborn as sns
 import matplotlib.pyplot as plt
 from datetime import datetime
 
@@ -65,7 +66,7 @@ crypto_data = get_crypto_data(coin, vs_currency, days)
 st.subheader(f'{coin.capitalize()} Price in {vs_currency.upper()}')
 st.write(crypto_data)
 
-# Live updating plot
+# Live updating plot with seaborn
 st.subheader('Live Price Plot')
 fig, ax = plt.subplots()
 line, = ax.plot(crypto_data.index, crypto_data['price'], label='Price')
@@ -74,9 +75,10 @@ while True:
     # Fetch updated data every 10 seconds
     updated_data = get_crypto_data(coin, vs_currency, days)
     line.set_data(updated_data.index, updated_data['price'])
-    ax.relim()
-    ax.autoscale_view()
-    fig.canvas.draw()
+
+    # Use Seaborn's set_style for better aesthetics
+    sns.set_style("whitegrid")
+    sns.lineplot(data=updated_data, x=updated_data.index, y='price', ax=ax, label='Price')
 
     # Update plot in Streamlit
     st.pyplot(fig)
@@ -88,6 +90,7 @@ while True:
     st.markdown(datetime.now().strftime("%H:%M:%S"))
     st.empty()
     plt.pause(10)
+
 
 
 
