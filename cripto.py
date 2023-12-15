@@ -10,6 +10,8 @@ def get_crypto_data(coin, vs_currency, days):
     url = f"https://api.coingecko.com/api/v3/coins/{coin}/market_chart?vs_currency={vs_currency}&days={days}"
     response = requests.get(url)
     data = response.json()
+     # Print the first few rows of the DataFrame
+
 
     # Check if 'prices' key exists in the received data
     if 'prices' in data:
@@ -61,6 +63,7 @@ vs_currency = st.sidebar.selectbox('Select Currency', ['usd', 'eur', 'gbp'])
 # Get cryptocurrency data
 days = 1  # Fetch data for the last 1 day
 crypto_data = get_crypto_data(coin, vs_currency, days)
+print(crypto_data.head())
 
 # Display data
 st.subheader(f'{coin.capitalize()} Price in {vs_currency.upper()}')
