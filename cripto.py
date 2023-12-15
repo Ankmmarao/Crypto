@@ -67,30 +67,28 @@ st.subheader(f'{coin.capitalize()} Price in {vs_currency.upper()}')
 st.write(crypto_data)
 
 # Live updating plot with seaborn
-st.subheader('Live Price Plot')
 fig, ax = plt.subplots()
 line, = ax.plot(crypto_data.index, crypto_data['price'], label='Price')
 
+# Use Seaborn's set_style for better aesthetics
+sns.set_style("whitegrid")
+
+# Infinite loop for updating the plot
 while True:
     # Fetch updated data every 10 seconds
     updated_data = get_crypto_data(coin, vs_currency, days)
+    
+    # Update the existing plot data
     line.set_data(updated_data.index, updated_data['price'])
-
-    # Use Seaborn's set_style for better aesthetics
-    sns.set_style("whitegrid")
+    
+    # Clear the previous plot in Streamlit
+    plt.cla()
+    
+    # Redraw the updated plot using Seaborn and Matplotlib
     sns.lineplot(data=updated_data, x=updated_data.index, y='price', ax=ax, label='Price')
-
-    # Update plot in Streamlit
+    
+    # Display the plot in Streamlit
     st.pyplot(fig)
-
+    
     # Wait for 10 seconds before fetching new data
-    st.empty()
-    st.markdown('<p class="title">Updating in 10 seconds...</p>', unsafe_allow_html=True)
-    st.empty()
-    st.markdown(datetime.now().strftime("%H:%M:%S"))
-    st.empty()
     plt.pause(10)
-
-
-
-
