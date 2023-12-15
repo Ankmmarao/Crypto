@@ -7,16 +7,16 @@ from datetime import datetime
 
 # Function to fetch cryptocurrency data from CoinGecko
 def get_crypto_data(coin, vs_currency, days):
-    # Get data from CoinGecko API
     url = f"https://api.coingecko.com/api/v3/coins/{coin}/market_chart?vs_currency={vs_currency}&days={days}"
     response = requests.get(url)
     data = response.json()
 
-    # Convert timestamp to datetime and prepare data for plotting
-    prices = pd.DataFrame(data['prices'], columns=['timestamp', 'price'])
-    prices['date'] = pd.to_datetime(prices['timestamp'], unit='ms')
-    prices.set_index('date', inplace=True)
-    return prices
+    # Check if 'prices' key exists in the received data
+    if 'prices' in data:
+        prices = pd.DataFrame(data['prices'], columns=['timestamp', 'price'])
+        prices['date'] = pd.to_datetime(prices['timestamp'], unit='ms')
+        prices.set_index('date', inplace=True)
+        return prices
 
 # Set Streamlit app configurations
 st.set_page_config(
